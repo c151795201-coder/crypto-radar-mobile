@@ -1,11 +1,11 @@
 {
-  "name": "幣圈雷達 V2",
-  "short_name": "幣圈雷達",
+  "name": "幣圈獵手 LIVE V3",
+  "short_name": "幣圈獵手",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#0b0f14",
-  "theme_color": "#0b0f14",
-  "description": "加密貨幣永續合約多因子市場掃描器",
+  "background_color": "#080d13",
+  "theme_color": "#080d13",
+  "description": "即時價格與未平倉量四象限加密貨幣市場獵手",
   "icons": [
     {
       "src": "./icons/icon-192.png",
