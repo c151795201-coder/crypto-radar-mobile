@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="Crypto Radar" />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="apple-touch-icon" href="./icons/icon-192.png" />
-  <title>Crypto Radar</title>
+  <title>幣圈雷達 V2</title>
   <style>
     :root{
       --bg:#0b0f14; --panel:#111821; --panel2:#151f2b; --text:#eef5ff; --muted:#8ea2b7;
@@ -78,7 +78,7 @@
     .mini{background:var(--panel2);border-radius:12px;padding:9px;border:1px solid rgba(255,255,255,.035)}
     .mini span{font-size:10px;color:var(--muted);display:block}
     .mini b{font-size:13px;display:block;margin-top:3px}
-    .reason{font-size:12px;color:#c2d0df;margin-top:10px;line-height:1.5}
+    .reason{font-size:12px;color:#c2d0df;margin-top:10px;line-height:1.5}.factorline{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.factor{font-size:10px;padding:4px 7px;border-radius:999px;background:#172334;color:#b9cbe0;border:1px solid #26384c}.risk.low{color:var(--long)}.risk.mid{color:var(--watch)}.risk.high{color:var(--short)}
     .empty{padding:34px 18px;text-align:center;color:var(--muted)}
     .error{margin:12px 0;padding:12px 13px;border-radius:14px;background:rgba(255,102,119,.09);border:1px solid rgba(255,102,119,.3);color:#ffc1c8;font-size:12px;line-height:1.5}
     .notice{margin:12px 0;padding:12px 13px;border-radius:14px;background:rgba(90,167,255,.08);border:1px solid rgba(90,167,255,.25);color:#cde3ff;font-size:12px;line-height:1.5}
@@ -104,7 +104,7 @@
   <header class="topbar">
     <div class="brandrow">
       <div>
-        <div class="brand">Crypto Radar <span class="pill">V1</span></div>
+        <div class="brand">幣圈雷達 <span class="pill">V2 專業版</span></div>
         <div class="status"><i class="statusdot" id="statusDot"></i><span id="statusText">尚未掃描</span></div>
       </div>
       <button class="fav" id="installBtn" title="加入主畫面" aria-label="加入主畫面">＋</button>
@@ -115,16 +115,16 @@
     <section class="hero">
       <div class="herohead">
         <div>
-          <div class="marketMood">市場掃描情緒</div>
+          <div class="marketMood">全市場多空情緒</div>
           <div class="moodValue" id="moodValue">—</div>
         </div>
         <button class="scanBtn" id="scanBtn">開始掃描</button>
       </div>
       <div class="progress"><div id="progressBar"></div></div>
       <div class="summary">
-        <div class="metric"><span>LONG</span><b id="longCount">0</b></div>
-        <div class="metric"><span>SHORT</span><b id="shortCount">0</b></div>
-        <div class="metric"><span>WATCH</span><b id="watchCount">0</b></div>
+        <div class="metric"><span>偏多</span><b id="longCount">0</b></div>
+        <div class="metric"><span>偏空</span><b id="shortCount">0</b></div>
+        <div class="metric"><span>觀察</span><b id="watchCount">0</b></div>
         <div class="metric"><span>掃描幣數</span><b id="scanCount">0</b></div>
       </div>
     </section>
@@ -151,7 +151,7 @@
         </select>
       </div>
       <div class="control">
-        <label>最低信心</label>
+        <label>最低綜合訊號分</label>
         <select id="minConfidence">
           <option value="0">全部</option>
           <option value="25" selected>25+</option>
@@ -167,23 +167,22 @@
 
     <div class="tabs" id="tabs">
       <button class="tab active" data-filter="ALL">全部</button>
-      <button class="tab" data-filter="LONG">🚀 LONG</button>
-      <button class="tab" data-filter="SHORT">🔻 SHORT</button>
-      <button class="tab" data-filter="WATCH">👀 WATCH</button>
+      <button class="tab" data-filter="LONG">🚀 偏多</button>
+      <button class="tab" data-filter="SHORT">🔻 偏空</button>
+      <button class="tab" data-filter="WATCH">👀 觀察</button>
       <button class="tab" data-filter="FAV">⭐ 自選</button>
     </div>
 
     <section class="list" id="resultList"></section>
     <div class="footer">
-      本工具是市場掃描與研究用途，不是獲利保證。手機瀏覽器若限制 Binance API、所在地網路封鎖，
-      App 會顯示連線錯誤而不會捏造資料。正式自動下單前應先做回測與模擬交易。
+      本工具僅供市場掃描與研究。綜合訊號分是多因子強弱評分，不是上漲／下跌機率。正式交易前應先做歷史回測、模擬交易與風險控管。
     </div>
   </main>
 
   <nav class="bottom">
     <button class="nav active"><strong>⌁</strong><span>雷達</span></button>
-    <button class="nav" id="quickLong"><strong>↗</strong><span>多頭</span></button>
-    <button class="nav" id="quickShort"><strong>↘</strong><span>空頭</span></button>
+    <button class="nav" id="quickLong"><strong>↗</strong><span>偏多</span></button>
+    <button class="nav" id="quickShort"><strong>↘</strong><span>偏空</span></button>
     <button class="nav" id="quickFav"><strong>★</strong><span>自選</span></button>
   </nav>
 
@@ -204,7 +203,7 @@
     scanning: false,
     results: [],
     filter: "ALL",
-    favorites: new Set(JSON.parse(localStorage.getItem("cr_favs") || "[]")),
+    favorites: new Set(JSON.parse(localStorage.getItem("cr_v2_favs") || "[]")),
     apiBase: localStorage.getItem("cr_api_base") || API_BASES[0],
     abortController: null
   };
@@ -233,6 +232,15 @@
     for(let i=1;i<arr.length;i++) e = alpha*arr[i] + (1-alpha)*e;
     return e;
   }
+  function emaSeries(arr, span){
+    if(!arr.length) return [];
+    const alpha=2/(span+1);
+    const out=new Array(arr.length);
+    out[0]=arr[0];
+    for(let i=1;i<arr.length;i++) out[i]=alpha*arr[i]+(1-alpha)*out[i-1];
+    return out;
+  }
+
 
   function rsi(arr, period=14){
     if(arr.length < period+1) return 50;
@@ -298,94 +306,208 @@
   }
 
   function score(m){
-    const W = {momentum:18, volume:22, oi:24, taker:16, funding:8, trend:12};
-    let L=0,S=0, lr=[], sr=[];
+    // V2 九因子模型：分數代表訊號強度，不是勝率。
+    const W={trend:16,momentum:14,macd:10,volume:12,oi:16,taker:10,funding:6,volatility:7,breakout:9};
+    let L=0,S=0,lr=[],sr=[],factors=[];
 
-    const mix = .65*m.p15 + .35*m.p1h;
-    const mom = clamp(mix/1.2,-1,1);
-    if(mom>0){L += W.momentum*mom; lr.push(`價格動能 ${fmtPct(mix)}`)}
-    else if(mom<0){S += W.momentum*Math.abs(mom); sr.push(`價格動能 ${fmtPct(mix)}`)}
-
-    if(m.volSpike>=1){
-      const vs=clamp((m.volSpike-1)/0.8,0,1);
-      if(m.p15>=0){L+=W.volume*vs; lr.push(`量能 ${m.volSpike.toFixed(1)}x`)}
-      else {S+=W.volume*vs; sr.push(`量能 ${m.volSpike.toFixed(1)}x`)}
+    // 1. EMA 9/21/55 趨勢結構
+    if(m.ema9>m.ema21 && m.ema21>m.ema55){
+      L+=W.trend; lr.push("均線呈多頭排列"); factors.push("趨勢↑");
+    }else if(m.ema9<m.ema21 && m.ema21<m.ema55){
+      S+=W.trend; sr.push("均線呈空頭排列"); factors.push("趨勢↓");
+    }else{
+      const spread=m.ema21 ? (m.ema9/m.ema21-1)*100 : 0;
+      if(spread>0){L+=W.trend*.35;lr.push("短均線偏多")}
+      else if(spread<0){S+=W.trend*.35;sr.push("短均線偏空")}
     }
 
+    // 2. 15m + 1h 價格動能
+    const mix=.65*m.p15+.35*m.p1h;
+    const mom=clamp(mix/1.5,-1,1);
+    if(mom>0){L+=W.momentum*mom;lr.push(`價格動能 ${fmtPct(mix)}`);factors.push("動能↑")}
+    else if(mom<0){S+=W.momentum*Math.abs(mom);sr.push(`價格動能 ${fmtPct(mix)}`);factors.push("動能↓")}
+
+    // 3. MACD 12/26/9 柱體
+    const macdNorm=m.price ? (m.macdHist/m.price)*100 : 0;
+    const macdAccel=m.price ? ((m.macdHist-m.macdHistPrev)/m.price)*100 : 0;
+    if(macdNorm>0){
+      L+=W.macd*clamp(Math.abs(macdNorm)*180,.2,1);
+      lr.push(macdAccel>0?"MACD 多方動能擴張":"MACD 維持多方");
+    }else if(macdNorm<0){
+      S+=W.macd*clamp(Math.abs(macdNorm)*180,.2,1);
+      sr.push(macdAccel<0?"MACD 空方動能擴張":"MACD 維持空方");
+    }
+
+    // 4. 成交量 + 量能加速度
+    if(m.volSpike>=1){
+      const vs=clamp((m.volSpike-1)/1.2,0,1);
+      const va=clamp((m.volAccel-1)/1.0,0,1);
+      const vscore=clamp(.65*vs+.35*va,0,1);
+      if(m.p15>=0){L+=W.volume*vscore;lr.push(`成交量 ${m.volSpike.toFixed(1)} 倍`)}
+      else{S+=W.volume*vscore;sr.push(`成交量 ${m.volSpike.toFixed(1)} 倍`)}
+      if(m.volAccel>1.4) factors.push("量能加速");
+    }
+
+    // 5. OI 變化 + OI 加速度
     const oiMix=.7*m.oi15+.3*m.oi1h;
     if(oiMix>0){
-      const os=clamp(oiMix/2,0,1);
-      if(m.p15>=0){L+=W.oi*os; lr.push(`OI +${oiMix.toFixed(2)}%`)}
-      else {S+=W.oi*os; sr.push(`OI +${oiMix.toFixed(2)}%`)}
+      const base=clamp(oiMix/3,0,1);
+      const acc=clamp(Math.max(m.oiAccel,0)/1.5,0,1);
+      const os=clamp(.75*base+.25*acc,0,1);
+      if(m.p15>=0){L+=W.oi*os;lr.push(`未平倉量 +${oiMix.toFixed(2)}%`)}
+      else{S+=W.oi*os;sr.push(`未平倉量 +${oiMix.toFixed(2)}%`)}
+      if(m.oiAccel>.5) factors.push("OI加速");
+    }else if(oiMix<-1){
+      factors.push("OI下降");
     }
 
-    if(m.taker>=1.15){
-      L+=W.taker*clamp((m.taker-1)/.5,0,1); lr.push(`主動買賣比 ${m.taker.toFixed(2)}`);
-    }else if(m.taker>0 && m.taker<=.87){
-      S+=W.taker*clamp((1-m.taker)/.5,0,1); sr.push(`主動買賣比 ${m.taker.toFixed(2)}`);
+    // 6. Taker 主動買賣比
+    if(m.taker>=1.12){
+      L+=W.taker*clamp((m.taker-1)/.45,0,1);
+      lr.push(`主動買盤較強 ${m.taker.toFixed(2)}`);
+    }else if(m.taker>0 && m.taker<=.89){
+      S+=W.taker*clamp((1-m.taker)/.45,0,1);
+      sr.push(`主動賣盤較強 ${m.taker.toFixed(2)}`);
     }
 
+    // 7. Funding：極端值視為市場擁擠
+    const fAbs=Math.abs(m.funding);
+    let crowdRisk=fAbs>=.0008?3:fAbs>=.0004?2:fAbs>=.0002?1:0;
     if(m.funding>=.0005){
-      S+=W.funding*clamp(Math.abs(m.funding)/.0015,0,1); sr.push(`Funding 偏多 ${(m.funding*100).toFixed(4)}%`);
+      S+=W.funding*clamp(fAbs/.0015,0,1);
+      sr.push(`多方資金費率偏擁擠 ${(m.funding*100).toFixed(4)}%`);
     }else if(m.funding<=-.0005){
-      L+=W.funding*clamp(Math.abs(m.funding)/.0015,0,1); lr.push(`Funding 偏空 ${(m.funding*100).toFixed(4)}%`);
+      L+=W.funding*clamp(fAbs/.0015,0,1);
+      lr.push(`空方資金費率偏擁擠 ${(m.funding*100).toFixed(4)}%`);
     }
 
-    if(m.ema9>m.ema21 && m.rsi>=52 && m.rsi<=78){
-      L+=W.trend; lr.push(`EMA 多頭 / RSI ${m.rsi.toFixed(0)}`);
-    }else if(m.ema9<m.ema21 && m.rsi>=22 && m.rsi<=48){
-      S+=W.trend; sr.push(`EMA 空頭 / RSI ${m.rsi.toFixed(0)}`);
-    }else if(m.rsi>82){
-      S+=W.trend*.5; sr.push(`RSI 過熱 ${m.rsi.toFixed(0)}`);
-    }else if(m.rsi<18){
-      L+=W.trend*.5; lr.push(`RSI 超賣 ${m.rsi.toFixed(0)}`);
+    // 8. ATR 波動率：適中波動加分，極端波動提高風險
+    if(m.atrPct>=.45 && m.atrPct<=2.8){
+      const vs=clamp(m.atrPct/2,0,1);
+      if(m.p15>=0)L+=W.volatility*vs;
+      else S+=W.volatility*vs;
     }
+    if(m.atrPct>4.5){crowdRisk=Math.max(crowdRisk,2);factors.push("高波動")}
 
-    const max = Object.values(W).reduce((a,b)=>a+b,0);
-    L = Math.round(1000*L/max)/10;
-    S = Math.round(1000*S/max)/10;
-    const d=L-S;
-    let signal, confidence, reason;
-    if(Math.max(L,S)<28 || Math.abs(d)<8){
-      signal="WATCH"; confidence=Math.max(L,S); reason=(L>=S?lr:sr).slice(0,4).join("；");
-    }else if(d>0){
-      signal="LONG"; confidence=L; reason=lr.slice(0,4).join("；");
+    // 9. 近20根突破 / 跌破
+    if(m.breakoutUp){
+      L+=W.breakout;lr.push("突破近期高點");factors.push("突破");
+    }else if(m.breakoutDown){
+      S+=W.breakout;sr.push("跌破近期低點");factors.push("跌破");
     }else{
-      signal="SHORT"; confidence=S; reason=sr.slice(0,4).join("；");
+      if(m.bbPos>.8 && m.p15>0)L+=W.breakout*.35;
+      if(m.bbPos<.2 && m.p15<0)S+=W.breakout*.35;
     }
-    return {longScore:L, shortScore:S, signal, confidence, reason:reason||"暫無明顯優勢"};
-  }
 
-  async function analyzeSymbol(ticker, fundingMap){
+    // RSI 只作風險修正，避免把超買直接等同做空
+    if(m.rsi>80){L*=.90;crowdRisk=Math.max(crowdRisk,2);factors.push("RSI過熱")}
+    if(m.rsi<20){S*=.90;crowdRisk=Math.max(crowdRisk,2);factors.push("RSI超賣")}
+
+    const max=Object.values(W).reduce((a,b)=>a+b,0);
+    L=Math.round(1000*L/max)/10;
+    S=Math.round(1000*S/max)/10;
+    const d=L-S;
+
+    let signal,confidence,reason;
+    if(Math.max(L,S)<30 || Math.abs(d)<9){
+      signal="WATCH";confidence=Math.max(L,S);reason=(L>=S?lr:sr).slice(0,5).join("；");
+    }else if(d>0){
+      signal="LONG";confidence=L;reason=lr.slice(0,5).join("；");
+    }else{
+      signal="SHORT";confidence=S;reason=sr.slice(0,5).join("；");
+    }
+
+    let setup="一般";
+    if(confidence>=70 && Math.abs(d)>=22 && crowdRisk<=1) setup="強勢";
+    else if(confidence>=55 && Math.abs(d)>=15) setup="較強";
+    else if(confidence<40) setup="偏弱";
+
+    return{
+      longScore:L,shortScore:S,signal,confidence,
+      reason:reason||"暫無明顯方向優勢",
+      crowdRisk,setup,factors:[...new Set(factors)].slice(0,5)
+    };
+  }
+  async function analyzeSymbol(ticker,fundingMap){
     const symbol=ticker.symbol;
-    const [kl, oi, taker] = await Promise.all([
-      fetchJson("/fapi/v1/klines",{symbol,interval:"5m",limit:"120"}),
+    const [kl,oi,taker]=await Promise.all([
+      fetchJson("/fapi/v1/klines",{symbol,interval:"5m",limit:"160"}),
       fetchJson("/futures/data/openInterestHist",{symbol,period:"5m",limit:"13"}),
-      fetchJson("/futures/data/takerlongshortRatio",{symbol,period:"5m",limit:"3"})
+      fetchJson("/futures/data/takerlongshortRatio",{symbol,period:"5m",limit:"5"})
     ]);
 
-    if(!Array.isArray(kl)||kl.length<25||!Array.isArray(oi)||oi.length<4) throw new Error("資料不足");
-    const close=kl.map(x=>n(x[4]));
-    const qvol=kl.map(x=>n(x[7]));
-    const p15=pct(close.at(-1),close.at(-4));
-    const p1h=pct(close.at(-1),close.at(-13));
-    const base=qvol.slice(-21,-1).reduce((a,b)=>a+b,0)/Math.max(1,qvol.slice(-21,-1).length);
-    const volSpike=base>0?qvol.at(-1)/base:0;
+    if(!Array.isArray(kl)||kl.length<60||!Array.isArray(oi)||oi.length<4) throw new Error("資料不足");
+
+    const high=kl.map(x=>n(x[2])),low=kl.map(x=>n(x[3])),close=kl.map(x=>n(x[4])),qvol=kl.map(x=>n(x[7]));
+    const price=close.at(-1);
+    const p15=pct(price,close.at(-4));
+    const p1h=pct(price,close.at(-13));
+
+    const base20=qvol.slice(-21,-1);
+    const baseVol=base20.reduce((a,b)=>a+b,0)/Math.max(1,base20.length);
+    const recent3=qvol.slice(-3).reduce((a,b)=>a+b,0)/3;
+    const prior6=qvol.slice(-9,-3).reduce((a,b)=>a+b,0)/6;
+    const volSpike=baseVol>0?qvol.at(-1)/baseVol:0;
+    const volAccel=prior6>0?recent3/prior6:1;
 
     const oiv=oi.map(x=>n(x.sumOpenInterestValue));
     const oi15=pct(oiv.at(-1),oiv.at(-4));
     const oi1h=pct(oiv.at(-1),oiv.length>=13?oiv.at(-13):oiv[0]);
-    const takerRatio=Array.isArray(taker)&&taker.length?n(taker.at(-1).buySellRatio,1):1;
-    const funding=n(fundingMap.get(symbol)?.lastFundingRate,0);
-    const rv=rsi(close,14), e9=ema(close,9), e21=ema(close,21);
-    const s=score({p15,p1h,volSpike,oi15,oi1h,taker:takerRatio,funding,rsi:rv,ema9:e9,ema21:e21});
+    const oi5=pct(oiv.at(-1),oiv.at(-2));
+    const oiPrev10=pct(oiv.at(-2),oiv.at(-4))/2;
+    const oiAccel=oi5-oiPrev10;
 
-    return {
-      symbol, price:close.at(-1), qv24:n(ticker.quoteVolume), ch24:n(ticker.priceChangePercent),
-      p15,p1h,volSpike,oi15,oi1h,taker:takerRatio,funding,rsi:rv,ema9:e9,ema21:e21,...s
+    const recentTaker=Array.isArray(taker)?taker.slice(-3):[];
+    const takerRatio=recentTaker.length
+      ? recentTaker.reduce((a,x)=>a+n(x.buySellRatio,1),0)/recentTaker.length
+      : 1;
+
+    const funding=n(fundingMap.get(symbol)?.lastFundingRate,0);
+    const rv=rsi(close,14);
+    const e9=ema(close,9),e21=ema(close,21),e55=ema(close,55);
+
+    // 線性時間 MACD，避免手機 CPU 負擔過大
+    const ema12=emaSeries(close,12);
+    const ema26=emaSeries(close,26);
+    const macdLine=close.map((_,i)=>ema12[i]-ema26[i]);
+    const macdSignal=emaSeries(macdLine,9);
+    const hist=macdLine.map((x,i)=>x-macdSignal[i]);
+    const macdHist=hist.at(-1),macdHistPrev=hist.at(-2);
+
+    // ATR(14)
+    const tr=[];
+    for(let i=1;i<close.length;i++){
+      tr.push(Math.max(high[i]-low[i],Math.abs(high[i]-close[i-1]),Math.abs(low[i]-close[i-1])));
+    }
+    const atrSlice=tr.slice(-14);
+    const atr=atrSlice.reduce((a,b)=>a+b,0)/Math.max(1,atrSlice.length);
+    const atrPct=price?atr/price*100:0;
+
+    // Bollinger(20,2σ)
+    const c20=close.slice(-20);
+    const mean20=c20.reduce((a,b)=>a+b,0)/c20.length;
+    const variance=c20.reduce((a,b)=>a+(b-mean20)**2,0)/c20.length;
+    const sd20=Math.sqrt(variance);
+    const bbUpper=mean20+2*sd20,bbLower=mean20-2*sd20;
+    const bbPos=bbUpper===bbLower?.5:clamp((price-bbLower)/(bbUpper-bbLower),0,1);
+
+    const prevHigh=Math.max(...high.slice(-21,-1));
+    const prevLow=Math.min(...low.slice(-21,-1));
+    const breakoutUp=price>prevHigh;
+    const breakoutDown=price<prevLow;
+
+    const s=score({
+      price,p15,p1h,volSpike,volAccel,oi15,oi1h,oiAccel,taker:takerRatio,funding,
+      rsi:rv,ema9:e9,ema21:e21,ema55:e55,macdHist,macdHistPrev,atrPct,bbPos,
+      breakoutUp,breakoutDown
+    });
+
+    return{
+      symbol,price,qv24:n(ticker.quoteVolume),ch24:n(ticker.priceChangePercent),
+      p15,p1h,volSpike,volAccel,oi15,oi1h,oiAccel,taker:takerRatio,funding,rsi:rv,
+      ema9:e9,ema21:e21,ema55:e55,macdHist,atrPct,bbPos,breakoutUp,breakoutDown,...s
     };
   }
-
   function setMessage(text,type="notice"){
     $("messageArea").innerHTML = text ? `<div class="${type}">${text}</div>` : "";
   }
@@ -427,27 +549,35 @@
             </div>
             <div class="price">$${fmtNum(x.price)} · 24H ${fmtPct(x.ch24)}</div>
           </div>
-          <div class="badge ${x.signal}">${x.signal}</div>
+          <div class="badge ${x.signal}">${x.signal==="LONG"?"偏多":x.signal==="SHORT"?"偏空":"觀察"}</div>
         </div>
         <div class="scoreRow">
-          <div class="score">${x.confidence.toFixed(0)}</div>
+          <div class="score">${x.confidence.toFixed(0)}<div style="font-size:9px;color:var(--muted);font-weight:600">綜合訊號分</div></div>
           <div class="bars">
             <div class="bar long"><i style="width:${clamp(x.longScore,0,100)}%"></i></div>
             <div class="bar short"><i style="width:${clamp(x.shortScore,0,100)}%"></i></div>
           </div>
         </div>
         <div class="grid">
-          <div class="mini"><span>15m</span><b>${fmtPct(x.p15)}</b></div>
-          <div class="mini"><span>1h</span><b>${fmtPct(x.p1h)}</b></div>
-          <div class="mini"><span>量能</span><b>${x.volSpike.toFixed(2)}x</b></div>
-          <div class="mini"><span>OI 15m</span><b>${fmtPct(x.oi15)}</b></div>
-          <div class="mini"><span>OI 1h</span><b>${fmtPct(x.oi1h)}</b></div>
-          <div class="mini"><span>Taker</span><b>${x.taker.toFixed(2)}</b></div>
-          <div class="mini"><span>Funding</span><b>${(x.funding*100).toFixed(4)}%</b></div>
-          <div class="mini"><span>RSI</span><b>${x.rsi.toFixed(1)}</b></div>
+          <div class="mini"><span>15分鐘漲跌</span><b>${fmtPct(x.p15)}</b></div>
+          <div class="mini"><span>1小時漲跌</span><b>${fmtPct(x.p1h)}</b></div>
+          <div class="mini"><span>爆量倍率</span><b>${x.volSpike.toFixed(2)} 倍</b></div>
+          <div class="mini"><span>量能加速度</span><b>${x.volAccel.toFixed(2)} 倍</b></div>
+          <div class="mini"><span>OI 15分鐘</span><b>${fmtPct(x.oi15)}</b></div>
+          <div class="mini"><span>OI加速度</span><b>${x.oiAccel>=0?"+":""}${x.oiAccel.toFixed(2)}</b></div>
+          <div class="mini"><span>主動買賣比</span><b>${x.taker.toFixed(2)}</b></div>
+          <div class="mini"><span>資金費率</span><b>${(x.funding*100).toFixed(4)}%</b></div>
+          <div class="mini"><span>RSI強弱</span><b>${x.rsi.toFixed(1)}</b></div>
+          <div class="mini"><span>ATR波動率</span><b>${x.atrPct.toFixed(2)}%</b></div>
+          <div class="mini"><span>布林位置</span><b>${Math.round(x.bbPos*100)}%</b></div>
           <div class="mini"><span>24H成交額</span><b>${fmtNum(x.qv24)}</b></div>
         </div>
-        <div class="reason">${x.reason}</div>
+        <div class="factorline">
+          <span class="factor">訊號型態：${x.setup}</span>
+          <span class="factor risk ${x.crowdRisk>=3?"high":x.crowdRisk>=2?"mid":"low"}">擁擠風險：${x.crowdRisk>=3?"高":x.crowdRisk>=2?"中":x.crowdRisk===1?"低":"很低"}</span>
+          ${(x.factors||[]).map(f=>`<span class="factor">${f}</span>`).join("")}
+        </div>
+        <div class="reason"><b>判斷依據：</b>${x.reason}</div>
       </article>`;
     }).join("");
   }
@@ -493,13 +623,13 @@
       );
 
       state.results=raw.filter(Boolean).sort((a,b)=>b.confidence-a.confidence || b.volSpike-a.volSpike);
-      localStorage.setItem("cr_last_results",JSON.stringify({ts:Date.now(),results:state.results.slice(0,80)}));
+      localStorage.setItem("cr_v2_last_results",JSON.stringify({ts:Date.now(),results:state.results.slice(0,80)}));
       updateSummary();
       render();
 
       $("statusText").textContent=`完成 · ${new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})}`;
       $("statusDot").style.background="var(--long)";
-      setMessage(`已從 Binance USDⓈ-M 公開市場資料完成掃描。資料來源端點：24H ticker、Premium/Funding、5m K 線、OI 歷史、Taker Buy/Sell Ratio。`);
+      setMessage(`掃描完成。V2 已綜合趨勢、動能、MACD、RSI、ATR、布林、量能、未平倉量、主動買賣比與資金費率。綜合訊號分只代表訊號強度，不代表勝率。`);
     }catch(err){
       console.error(err);
       $("statusText").textContent="連線失敗";
@@ -508,7 +638,7 @@
         `無法取得即時市場資料。常見原因：手機網路或所在地限制 Binance API、瀏覽器 CORS/內容政策、Binance 暫時限流。<br><br><b>錯誤：</b>${String(err.message||err)}`,
         "error"
       );
-      const cached=JSON.parse(localStorage.getItem("cr_last_results")||"null");
+      const cached=JSON.parse(localStorage.getItem("cr_v2_last_results")||"null");
       if(cached?.results?.length){
         state.results=cached.results;
         updateSummary(); render();
@@ -530,7 +660,7 @@
     if(!b)return;
     const s=b.dataset.fav;
     state.favorites.has(s)?state.favorites.delete(s):state.favorites.add(s);
-    localStorage.setItem("cr_favs",JSON.stringify([...state.favorites]));
+    localStorage.setItem("cr_v2_favs",JSON.stringify([...state.favorites]));
     render();
   });
 
@@ -551,11 +681,11 @@
   $("quickFav").onclick=()=>setFilter("FAV");
 
   $("installBtn").addEventListener("click",()=>{
-    setMessage(`iPhone：用 Safari 開啟這個網站 → 點「分享」→「加入主畫面」。若你目前是從檔案預覽開啟，需先把整個 PWA 資料夾部署到 HTTPS 網址，才能完整使用離線安裝功能。`);
+    setMessage(`iPhone：用 Safari 點「分享」→「加入主畫面」，即可像 App 一樣從桌面啟動。`);
   });
 
   window.addEventListener("load",()=>{
-    const cached=JSON.parse(localStorage.getItem("cr_last_results")||"null");
+    const cached=JSON.parse(localStorage.getItem("cr_v2_last_results")||"null");
     if(cached?.results?.length){
       state.results=cached.results; updateSummary(); render();
       $("statusText").textContent=`快取 · ${new Date(cached.ts).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})}`;

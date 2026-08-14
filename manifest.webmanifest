@@ -1,11 +1,11 @@
 {
-  "name": "Crypto Radar",
-  "short_name": "Crypto Radar",
+  "name": "幣圈雷達 V2",
+  "short_name": "幣圈雷達",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#0b0f14",
   "theme_color": "#0b0f14",
-  "description": "Binance USDⓈ-M crypto market scanner",
+  "description": "加密貨幣永續合約多因子市場掃描器",
   "icons": [
     {
       "src": "./icons/icon-192.png",
